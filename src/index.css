@@ -1,0 +1,267 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-display: 'Bricolage Grotesque', ui-sans-serif, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --font-timer: 'Barlow Condensed', 'Bricolage Grotesque', ui-sans-serif, sans-serif;
+
+  --color-ink: #0c1a1a;
+  --color-ink-soft: #1a3332;
+  --color-mist: #e8f2f1;
+  --color-sea: #0f766e;
+  --color-sea-bright: #14b8a6;
+  --color-brass: #c4a35a;
+  --color-sand: #f3efe6;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    overflow: hidden;
+    overscroll-behavior: none;
+    touch-action: manipulation;
+  }
+
+  body {
+    font-family: var(--font-display);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: #0a101f;
+  }
+
+  button {
+    font: inherit;
+    touch-action: manipulation;
+  }
+}
+
+@keyframes sweep-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-sweep-in {
+  animation: sweep-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.sky-layer {
+  transition:
+    background 2.5s ease,
+    opacity 2.5s ease;
+}
+
+/*
+  Full-screen digital board.
+  font-size is set by useFitDigits; child sizes use em so they scale together.
+  Portrait stacks; landscape runs in a single row.
+*/
+.digital-board {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: baseline;
+  justify-content: center;
+  line-height: 0.88;
+  white-space: nowrap;
+}
+
+.digital-board.is-bold .digital-digit,
+.digital-board.is-bold .digital-sep {
+  font-weight: 700;
+}
+
+.digital-board.is-fill {
+  font-family: var(--font-timer);
+  line-height: 0.72;
+  align-items: center;
+}
+
+.digital-board.is-fill .digital-digit {
+  font-family: var(--font-timer);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  /* Stretch glyphs taller so they fill vertical space */
+  display: inline-block;
+  transform: scaleY(1.28);
+  transform-origin: center center;
+  line-height: 0.72;
+}
+
+.digital-board.is-fill .digital-sep {
+  font-family: var(--font-timer);
+  font-weight: 700;
+  font-size: 0.78em;
+  opacity: 0.85;
+  transform: scaleY(1.2);
+  display: inline-block;
+}
+
+.digital-unit {
+  display: inline-flex;
+  align-items: center;
+}
+
+.digital-digit {
+  font-size: 1em;
+  letter-spacing: -0.045em;
+}
+
+.digital-sep {
+  font-family: var(--font-mono);
+  font-size: 0.82em;
+  font-weight: 700;
+  margin-inline: 0.01em;
+  opacity: 0.9;
+}
+
+.digital-frac-digit {
+  font-size: 0.55em;
+  opacity: 0.72;
+}
+
+/* Small seconds + AM/PM beside (or under) the big HH:MM */
+.digital-meta {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  margin-left: 0.12em;
+  line-height: 1;
+  align-self: flex-end;
+  margin-bottom: 0.08em;
+  gap: 0.08em;
+}
+
+.digital-seconds {
+  font-family: var(--font-timer);
+  font-size: 0.34em;
+  font-weight: 700;
+  opacity: 0.78;
+  letter-spacing: 0.02em;
+  /* No tall stretch — keep meta compact */
+  transform: none !important;
+  line-height: 1;
+}
+
+.digital-period {
+  font-family: var(--font-timer);
+  font-size: 0.22em;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  opacity: 0.85;
+  line-height: 1;
+  transform: none !important;
+}
+
+.digital-board.is-fill .digital-seconds {
+  font-size: 0.36em;
+}
+
+.digital-board.is-fill .digital-period {
+  font-size: 0.24em;
+}
+
+.digital-caption {
+  font-size: clamp(0.9rem, 2.4vw, 1.2rem);
+}
+
+@media (orientation: portrait) {
+  .digital-board {
+    flex-direction: column;
+    align-items: center;
+    white-space: normal;
+    /* Space stacked hour / minute / seconds so scaleY stretch cannot collide */
+    gap: 0.18em;
+  }
+
+  .digital-sep,
+  .digital-board.is-fill .digital-sep {
+    display: none;
+  }
+
+  .digital-unit {
+    line-height: 0.92;
+  }
+
+  .digital-board.is-fill {
+    /* Budget vertical room for scaleY(1.35) between stacked units */
+    line-height: 0.78;
+    gap: 0.32em;
+  }
+
+  .digital-board.is-fill .digital-unit {
+    line-height: 0.78;
+  }
+
+  .digital-board.is-fill .digital-digit {
+    transform: scaleY(1.35);
+  }
+
+  .digital-fraction {
+    flex-direction: row;
+    margin-top: 0.05em;
+  }
+
+  .digital-meta {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: center;
+    align-self: center;
+    margin-left: 0;
+    margin-top: 0.08em;
+    margin-bottom: 0;
+    gap: 0.35em;
+  }
+
+  .digital-board.is-fill .digital-meta {
+    margin-top: 0.06em;
+  }
+
+  .digital-seconds {
+    font-size: 0.28em;
+  }
+
+  .digital-period {
+    font-size: 0.2em;
+  }
+
+  .digital-board.is-fill .digital-seconds {
+    font-size: 0.3em;
+  }
+
+  .digital-board.is-fill .digital-period {
+    font-size: 0.22em;
+  }
+}
+
+@media (orientation: landscape) {
+  .app-chrome {
+    padding-block: 0.35rem;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 430px) {
+  .digital-caption {
+    font-size: 0.8rem;
+  }
+
+  .controls-bar {
+    gap: 0.35rem;
+  }
+}
